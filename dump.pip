@@ -1,0 +1,12 @@
+Django==1.8
+django-appconf==1.0.1
+django-ckeditor==4.4.7
+django-image-cropping==1.0.1
+django-mptt==0.7.2
+django-mptt-tree-editor==0.1.2
+django-robokassa==1.2
+django-sitetree==1.4.0
+easy-thumbnails==2.2
+MySQL-python==1.2.5
+Pillow==2.8.1
+six==1.9.0
