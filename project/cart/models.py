@@ -28,6 +28,7 @@ class CartItem(models.Model):
 class Order(models.Model):
     user = models.ForeignKey(Account)
     cart_id = models.CharField(max_length=240)
+    is_paid = models.BooleanField(default=False)
 
 
     def get_all_cart_items(self):

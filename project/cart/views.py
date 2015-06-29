@@ -173,46 +173,16 @@ def cofirmation_view(request, template_name="cart/confirmation.html"):
 def payment_received(sender, **kwargs):
     """обрабатываем сигнал оплаты от платежной системы"""
     order = Order.objects.get(id=kwargs['InvId'])
-    # order.status = Order.PAID
+    order.is_paid = True
+    order.save()
 
+    subject = u'заявка от %s' % order.user.first_name
+    message = u'Номер заказа: %s \n Имя: %s \n телефон: %s' % (order.id, order.user.last_name, order.user.phone)
+    send_mail(subject, message, 'teamer777@gmail.com', [ADMIN_EMAIL], fail_silently=False)
 
-
-
-    # # обнуляем купон при успешном его использовании
-    # cupon_done = Cupon.objects.get(id=order.cupon.id)
-    # cupon_done.percent = '0'
-    # cupon_done.save()
-
-    # отправляем письмо администратору
-    # order_items = OrderItem.objects.filter(order=order)
-    # items = ''
-    # for item in order_items:
-    #     items = items + '%s \n' % item.name
-    # payment_method = u'Оплата произведена'
-    # subject = u'waymy.ru поступила оплата %s' % order.transaction_id
-    # message = u'Заказ №: %s \n Имя: %s \n телефон: %s \n почта: %s \n \
-    # id заказа: %s \n Товары: %s' % (
-    #     order.transaction_id, order.shipping_name,
-    #     order.phone, order.email, order.id, items)
-    #
-    # send_mail(
-    #     subject, message, 'teamer777@gmail.com',
-    #     [ADMIN_EMAIL], fail_silently=False)
-    #
-    # context_dict = {
-    #         'name': order.shipping_name,
-    #         'transaction': order.transaction_id,
-    #         'id': order.id,
-    #         'items': items,
-    #         'total': order.total,
-    #     }
-    #
-    # message = render_to_string('checkout/email.html', context_dict)
-    # from_email = 'teamer777@gmail.com'
-    # to = '%s' % order.email
-    # msg = EmailMultiAlternatives(subject, message, from_email, [to])
-    # msg.content_subtype = "html"
-    # msg.send()
-
+    subject = u'Заказ на kastoreum.ru%s' % order.user.first_name
+    message = u'Номер заказа %s \n Спасибо, %s! \n Ваша заявка принята! ' % (order.id, order.user.first_name,)
+    send_mail(subject, message, 'teamer777@gmail.com', [order.user.email], fail_silently=False)
+    
 result_received.connect(payment_received)
 
