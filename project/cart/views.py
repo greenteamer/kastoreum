@@ -24,6 +24,8 @@ def cart_view(request, template_name="cart/cart.html"):
     form = AccountForm()
     delivery_form = DeliveryForm()
 
+    delivery_status = False
+
     if user.is_authenticated():
         data = {
             'first_name': user.first_name,
@@ -41,7 +43,6 @@ def cart_view(request, template_name="cart/cart.html"):
     cart_info.cart_id = cart_id
 
     if request.method == 'POST' and "checkout" in request.POST:
-        # TODO: оформить заказ только после  того как пользователь просчитал доставку
         if user.is_authenticated():
             postdata = request.POST.copy()
             pureForm = PureAccountForm(postdata)
@@ -73,15 +74,6 @@ def cart_view(request, template_name="cart/cart.html"):
 
         url = '/confirmation?cart_id=%s' % request.session['cart_id']
         cart.del_session_cart_id(request)
-        # cart_items = []
-
-        # subject = u'заявка от %s' % order.user.first_name
-        # message = u'Номер заказа: %s \n Имя: %s \n телефон: %s' % (order.id, order.user.last_name, order.user.phone)
-        # send_mail(subject, message, 'teamer777@gmail.com', [ADMIN_EMAIL], fail_silently=False)
-        #
-        # subject = u'Заказ на kastoreum.ru%s' % order.user.first_name
-        # message = u'Номер заказа %s \n Спасибо, %s! \n Ваша заявка принята! ' % (order.id, order.user.first_name,)
-        # send_mail(subject, message, 'teamer777@gmail.com', [user.email], fail_silently=False)
 
         return HttpResponseRedirect(url)
 
@@ -111,12 +103,14 @@ def cart_view(request, template_name="cart/cart.html"):
             delivery_item.city = region
             delivery_item.price = cart_info.delivery_price
             delivery_item.save()
+            delivery_status = True
         except:
             delivery_item = Delivery()
             delivery_item.city = region
             delivery_item.price = cart_info.delivery_price
             delivery_item.cart_id = cart_id
             delivery_item.save()
+            delivery_status = True
 
 
 

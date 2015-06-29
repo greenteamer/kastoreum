@@ -70,7 +70,7 @@
                                 {% else %}
                                     {{ pureForm.as_p }}<br/>
                                 {% endif %}
-                                <input type="submit" name="checkout" class="btn btn-primary" value="Оформить заказ" />
+                                <input type="submit" name="checkout" class="btn btn-primary {% if delivery_status %}{% else %}disabled{% endif %}" value="Оформить заказ" />
                             </form>
                         </div>
                     </div>

@@ -19,6 +19,7 @@
                             <th>Имя клиента</th>
                             <th>Стоимость корзины</th>
                             <th>Имена</th>
+                            <th>Статус заказа</th>
                             <th></th>
                         </tr>
                     </thead>
@@ -32,6 +33,13 @@
                                     {% for item in order.items %}
                                         <a href="{{ item.url }}">{{ item.name }}</a><br/>
                                     {% endfor %}
+                                </td>
+                                <td>
+                                    {% if order.is_paid %}
+                                        <p>Олачен</p>
+                                    {% else %}
+                                        <p>Не оплачен</p>
+                                    {% endif %}
                                 </td>
                                 <td><a href="/order/{{ order.id }}" class="btn btn-primary">Подробнее</a></td>
                             </tr>
